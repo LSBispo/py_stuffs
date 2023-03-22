@@ -1,0 +1,938 @@
+import time
+
+import pandas as pd
+
+import os
+
+import getpass
+
+from datetime import date
+
+from tkinter import messagebox
+
+from tkinter import *
+
+from selenium import webdriver
+
+from selenium.webdriver.common.by import By
+
+from selenium.webdriver.common.keys import Keys
+
+from selenium.webdriver.support.ui import WebDriverWait
+
+from selenium.webdriver.support import expected_conditions as ec
+
+pd.options.mode.chained_assignment = None
+
+ 
+
+ 
+
+# cronometrar tempo da execução
+
+start = time.time()
+
+ 
+
+def botao():
+
+    root = Tk()
+
+    root.title("Login FY")
+
+    root.geometry("300x110")
+
+ 
+
+    def Ok():
+
+        global uname
+
+        global password
+
+ 
+
+        uname = e1.get()
+
+        password = e2.get()
+
+ 
+
+        root.destroy()
+
+ 
+
+ 
+
+    def on_closing():
+
+        if messagebox.askokcancel("Sair", "Você deseja sair?\nIsso irá parar o programa"):
+
+            root.destroy()
+
+ 
+
+            exit()
+
+ 
+
+ 
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
+ 
+
+ 
+
+    def func(event):
+
+        global uname
+
+        global password
+
+ 
+
+        uname = e1.get()
+
+        password = e2.get()
+
+ 
+
+        root.destroy()
+
+    root.bind('<Return>', func)
+
+ 
+
+    global e1
+
+    global e2
+
+ 
+
+    Label(root, text="Funcional").place(x=10, y=10)
+
+    Label(root, text="Senha").place(x=10, y=40)
+
+    Label(root, text="Pressione ENTER ou clique em Login").place(x=10, y=70)
+
+ 
+
+    e1 = Entry(root)
+
+    #e1.insert(END, 'default text')
+
+    e1.place(x=140, y=10)
+
+ 
+
+    e2 = Entry(root)
+
+    e2.place(x=140, y=40)
+
+    e2.config(show="*")
+
+ 
+
+    Button(root, text="Login", command=Ok,height=1, width=5).place(x=220, y=70)
+
+    root.mainloop()
+
+ 
+
+# Login botao
+
+botao()
+
+ 
+
+ 
+
+# cabeçalho para rodar
+
+chrome_options = webdriver.ChromeOptions()
+
+flags_i_want = ['cookies-without-same-site-must-be-secure@2', 'same-site-by-default-cookies@2']
+
+prefs = {'download.default_directory' : r'<path>\Automação VOLCKER'.format(getpass.getuser())}
+
+ 
+
+ 
+
+ 
+
+chrome_options.add_experimental_option('localState', prefs)
+
+chrome_options.add_experimental_option("prefs",prefs)
+
+ 
+
+# caminho do chromedrive, site e label=nome do site na aba
+
+browser = webdriver.Chrome(executable_path=r'<path>\chromedriver.exe', options=chrome_options)
+
+ 
+
+ 
+
+ 
+
+browser.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
+
+params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': r'<path>\Automação VOLCKER'.format(getpass.getuser())}}
+
+command_result = browser.execute("send_command", params)
+
+ 
+
+ 
+
+# LER O ARQUIVO BASE DOS CNPJS
+
+base = pd.ExcelFile(r'<path>\Base.xlsx'.format(getpass.getuser()))
+
+# lê os dados e armazena em dataFrame
+
+df = base.parse("CONSULTA")
+
+# Coluna do Status
+
+df['Status'] = ""
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+#Login no FY
+
+browser.get(http://intracorp9.itau/O7CA/Default.aspx?SERVER=intracorp9.itau&SLT=60&ReturnUrl=%2foc3Portal%2fdefault.aspx)
+
+# browser.get(
+
+browser.switch_to.frame('container')
+
+# breakpoint()
+
+browser.find_element_by_xpath("/html/body/div[4]/form/table/tbody/tr[1]/td[2]/input").send_keys(uname)
+
+browser.find_element_by_xpath("/html/body/div[4]/form/table/tbody/tr[2]/td[2]/input").send_keys(password)
+
+browser.find_element_by_xpath("/html/body/div[4]/form/table/tbody/tr[3]/td[2]/button").click()
+
+ 
+
+# breakpoint()
+
+wait = WebDriverWait(browser, 200)
+
+element = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div/div[2]/button[2]')))
+
+browser.find_element_by_xpath("/html/body/div/div[2]/button[2]").click()
+
+ 
+
+ 
+
+ 
+
+ 
+
+# Entrar no site consulta CNPJ
+
+time.sleep(4)
+
+browser.get('http://intracorp9.itau/fyportal/FUNDOSINVEST/COTISTAS/UIConsultarCotistas.aspx')
+
+# colocar o wait
+
+wait = WebDriverWait(browser, 200)
+
+element = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div/div[1]/div[1]/fieldset/table[1]/tbody/tr/td[1]/div/table/tbody/tr[3]/td[1]/input')))
+
+ 
+
+ 
+
+# Pegar data do dia, para criar a pasta
+
+today = date.today()
+
+d1 = today.strftime("%d.%m.%Y")
+
+os.makedirs(r'<path>\Automação VOLCKER\{}'.format(getpass.getuser(), d1))
+
+final = (r'<path>\Automação VOLCKER\{}'.format(getpass.getuser(), d1))
+
+ 
+
+ 
+
+# Criar planilha com dentro da passta com o nome do dia, qunado for rodar a automação
+
+data = []
+
+df_1 = pd.DataFrame({
+
+                    'Banco': data,
+
+                    'Fundo': data,
+
+                    'Nome Fundo': data,
+
+                    'Banco Cliente': data,
+
+                    'Agência': data,
+
+                    'Conta': data,
+
+                    'DAC': data,
+
+                    'Subconta': data,
+
+                    'Pessoa': data,
+
+                    'Documento': data,
+
+                    'Nome Cliente': data,
+
+                    'Data Lançamento': data,
+
+                    'Saldo': data,
+
+                    'Valor Bruto': data,
+
+                    'Saldo Prejuízo': data,
+
+                    'Valor Cota': data,
+
+                    'Data Cota': data
+
+                    })
+
+ 
+
+# df_1 = pd.DataFrame([])
+
+#with open(r'<path>\{}\Base_Volcker_{}.xlsx'.format(getpass.getuser(), d1, d1)) as f:
+
+      #df_1.to_excel(f, index=False)
+
+ 
+
+df_1.to_excel(r'<path>\Automação VOLCKER\{}\Base_Volcker_{}.xlsx'.format(getpass.getuser(), d1, d1), index=False)
+
+ 
+
+# breakpoint()
+
+ 
+
+# for para pegar as linhas de CNPJ
+
+for row, dfr in df.iterrows():
+
+ 
+
+    # Codigo do fundo
+
+    cnpj = dfr['CNPJ']
+
+ 
+
+    # breakpoint()
+
+    print(int(cnpj))
+
+ 
+
+    # Mandar o cpnj
+
+    #time.sleep(5)
+
+    # colocar o wait
+
+    wait = WebDriverWait(browser, 200)
+
+    element = wait.until(ec.element_to_be_clickable((By.XPATH, '/html/body/form/div[3]/div/div[1]/div[1]/fieldset/table[1]/tbody/tr/td[1]/div/table/tbody/tr[3]/td[3]/input')))
+
+ 
+
+    browser.find_element_by_xpath("/html/body/form/div[3]/div/div[1]/div[1]/fieldset/table[1]/tbody/tr/td[1]/div/table/tbody/tr[3]/td[3]/input").send_keys(int(cnpj))
+
+ 
+
+    # Selcionar a bolinha do cpnj
+
+    browser.find_element_by_xpath("/html/body/form/div[3]/div/div[1]/div[1]/fieldset/table[1]/tbody/tr/td[1]/div/table/tbody/tr[3]/td[1]/input").click()
+
+ 
+
+ 
+
+    # Esperar e dar ENTER para ver se tem o arquivo - Consulta
+
+    time.sleep(0.5)
+
+    browser.find_element_by_id("ctl00_ContentPlaceHolder1_txtCPFCNPJ").click()
+
+    browser.find_element_by_id("ctl00_ContentPlaceHolder1_txtCPFCNPJ").send_keys(Keys.ENTER)
+
+ 
+
+ 
+
+ 
+
+    #break teste ok
+
+    print("\n")
+
+    try:
+
+        # alert = browser.switch_to_alert()
+
+        # alert.accept()
+
+        time.sleep(1)
+
+        browser.switch_to_alert().accept()
+
+        print("alert accepted")
+
+        browser.get('http://intracorp9.itau/fyportal/FUNDOSINVEST/COTISTAS/UIConsultarCotistas.aspx')
+
+        #sample_list.append(fundo)
+
+        df.loc[row, 'Status'] = "Não tem Posição"
+
+ 
+
+ 
+
+        continue
+
+    except:
+
+        print("no alert")
+
+        print("PEGAR EXCEL")
+
+ 
+
+        #import pdb
+
+ 
+
+        time.sleep(1)
+
+        abas = len(browser.window_handles)
+
+        print(abas)
+
+ 
+
+        #colocar aqui o bug dos tab
+
+ 
+
+ 
+
+        if abas ==2:
+
+            print("esperar pelo aqrquivo na pasta")
+
+            print("\nEspera")
+
+ 
+
+            #esperar baixar o arquivo
+
+            while not os.path.exists(r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser())):
+
+                time.sleep(1)
+
+                print("esperar 1 segundo")
+
+ 
+
+ 
+
+            if os.path.exists(r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser())):
+
+                print("\n")
+
+                print("baixou antes")
+
+                # while not os.path.exists(r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser())):
+
+                #     time.sleep(1)
+
+ 
+
+                #if os.path.isfile(r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser())):
+
+                print("existeee33")
+
+ 
+
+ 
+
+                time.sleep(4)
+
+ 
+
+                df0 = pd.read_csv(
+
+                    r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser()), sep=';',
+
+                    encoding='latin-1', index_col=False)
+
+ 
+
+                df0.to_excel(r'<path>\{}\{}.xlsx'.format(getpass.getuser(), d1, cnpj),
+
+                             index=False)
+
+ 
+
+                os.remove(r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser()))
+
+ 
+
+                # Juntar arquivos baixados, no arquivo base_mandar
+
+                excel2 = r'<path>\{}\{}.xlsx'.format(getpass.getuser(), d1, cnpj, index=False)
+
+ 
+
+                excel1 = r'<path>\{}\Base_Volcker_{}.xlsx'.format(getpass.getuser(),
+
+                                                                                                   d1, d1, index=False)
+
+ 
+
+                df1 = pd.read_excel(excel1)
+
+ 
+
+ 
+
+ 
+
+ 
+
+                df2 = pd.read_excel(excel2)
+
+ 
+
+                valor_bruto = df2['Valor Bruto']
+
+                print(valor_bruto)
+
+                if ((valor_bruto == 0).all()) == True:
+
+                    print("tudo zerooooooooooooooo")
+
+                    df.loc[row, 'Status'] = "Não tem posição"
+
+                else:
+
+                    df.loc[row, 'Status'] = "Tem posição"
+
+ 
+
+                values1 = df1[['Banco',
+
+                               'Fundo',
+
+                               'Nome Fundo',
+
+                               'Banco Cliente',
+
+                               'Agência',
+
+                               'Conta',
+
+                               'DAC',
+
+                               'Subconta',
+
+                               'Pessoa',
+
+                               'Documento',
+
+                               'Nome Cliente',
+
+                               'Data Lançamento',
+
+                               'Saldo',
+
+                               'Valor Bruto',
+
+                               'Saldo Prejuízo',
+
+                               'Valor Cota',
+
+                               'Data Cota']]
+
+ 
+
+                values2 = df2[['Banco',
+
+                               'Fundo',
+
+                               'Nome Fundo',
+
+                               'Banco Cliente',
+
+                               'Agência',
+
+                               'Conta',
+
+                               'DAC',
+
+                               'Subconta',
+
+                               'Pessoa',
+
+                               'Documento',
+
+                               'Nome Cliente',
+
+                               'Data Lançamento',
+
+                               'Saldo',
+
+                               'Valor Bruto',
+
+                               'Saldo Prejuízo',
+
+                               'Valor Cota',
+
+                               'Data Cota']]
+
+ 
+
+                dataframes = [values1, values2]
+
+ 
+
+                join = pd.concat(dataframes)
+
+ 
+
+                join.to_excel(
+
+                    r'<path>\{}\Base_Volcker_{}.xlsx'.format(getpass.getuser(), d1,
+
+                                                                                              d1), index=False)
+
+ 
+
+                os.remove(r'<path>\{}\{}.xlsx'.format(getpass.getuser(), d1, cnpj))
+
+ 
+
+                #with open(r'<path>\{}\Base_Volcker_{}.csv'.format(getpass.getuser(), d1, d1), 'w',  encoding='latin') as f:
+
+                    #out.to_csv(f, sep=';', line_terminator='\n')
+
+ 
+
+                print("click antes")
+
+                #break
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+            else:
+
+                raise ValueError(
+
+                    "%s isn't a file!" % r'<path>\CONSULTA_COTISTAS.csv'.format(
+
+                        getpass.getuser()))
+
+ 
+
+            # Fechar aba de Download
+
+            browser.switch_to.window(browser.window_handles[-1])
+
+            browser.close()
+
+ 
+
+            browser.switch_to.window(browser.window_handles[-1])
+
+            browser.get('http://intracorp9.itau/fyportal/FUNDOSINVEST/COTISTAS/UIConsultarCotistas.aspx')
+
+            time.sleep(1)
+
+            continue
+
+ 
+
+                #break
+
+ 
+
+ 
+
+    print("\n")
+
+ 
+
+    pagina = browser.window_handles
+
+ 
+
+    #time.sleep(5)
+
+    element = wait.until(ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_btnExcel')))
+
+    baixar = browser.find_element_by_id("ctl00_ContentPlaceHolder1_btnExcel").click()
+
+ 
+
+ 
+
+ 
+
+ 
+
+    # Esperar baixar o arquivo - Normal de quando CLICAR
+
+    while not os.path.exists(r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser())):
+
+        time.sleep(1)
+
+ 
+
+    if os.path.isfile(r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser())):
+
+        print("existeee11")
+
+        #df.loc[row, 'Status'] = "Tem"
+
+ 
+
+ 
+
+ 
+
+ 
+
+        time.sleep(4)
+
+        df0 = pd.read_csv(
+
+            r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser()), sep=';',
+
+            encoding='latin-1', index_col=False)
+
+ 
+
+        df0.to_excel(r'<path>\{}\{}.xlsx'.format(getpass.getuser(), d1, cnpj),
+
+                     index=False)
+
+ 
+
+        os.remove(r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser()))
+
+ 
+
+        # Juntar arquivos baixados, no arquivo base_mandar
+
+        excel2 = r'<path>\{}\{}.xlsx'.format(getpass.getuser(), d1, cnpj, index=False)
+
+        excel1 = r'<path>\{}\Base_Volcker_{}.xlsx'.format(getpass.getuser(),
+
+                                                                                           d1, d1, index=False)
+
+ 
+
+        df1 = pd.read_excel(excel1)
+
+        df2 = pd.read_excel(excel2)
+
+ 
+
+        valor_bruto = df2['Valor Bruto']
+
+        print(valor_bruto)
+
+        if ((valor_bruto == 0).all()) == True:
+
+            print("tudo zerooooooooooooooo")
+
+            df.loc[row, 'Status'] = "Não tem posição"
+
+        else:
+
+            df.loc[row, 'Status'] = "Tem posição"
+
+ 
+
+        values1 = df1[['Banco',
+
+                       'Fundo',
+
+                       'Nome Fundo',
+
+                       'Banco Cliente',
+
+                       'Agência',
+
+                       'Conta',
+
+                       'DAC',
+
+                       'Subconta',
+
+                       'Pessoa',
+
+                       'Documento',
+
+                       'Nome Cliente',
+
+                       'Data Lançamento',
+
+                       'Saldo',
+
+                       'Valor Bruto',
+
+                       'Saldo Prejuízo',
+
+                       'Valor Cota',
+
+                       'Data Cota']]
+
+ 
+
+        values2 = df2[['Banco',
+
+                       'Fundo',
+
+                       'Nome Fundo',
+
+                       'Banco Cliente',
+
+                       'Agência',
+
+                       'Conta',
+
+                       'DAC',
+
+                       'Subconta',
+
+                       'Pessoa',
+
+                       'Documento',
+
+                       'Nome Cliente',
+
+                       'Data Lançamento',
+
+                       'Saldo',
+
+                       'Valor Bruto',
+
+                       'Saldo Prejuízo',
+
+                       'Valor Cota',
+
+                       'Data Cota']]
+
+ 
+
+        dataframes = [values1, values2]
+
+ 
+
+        join = pd.concat(dataframes)
+
+ 
+
+        join.to_excel(r'<path>\{}\Base_Volcker_{}.xlsx'.format(getpass.getuser(), d1, d1), index=False)
+
+ 
+
+        os.remove(r'<path>\{}\{}.xlsx'.format(getpass.getuser(), d1, cnpj))
+
+ 
+
+ 
+
+        print("click normal")
+
+        #break
+
+ 
+
+ 
+
+ 
+
+ 
+
+    else:
+
+        raise ValueError("%s isn't a file!" % r'<path>\CONSULTA_COTISTAS.csv'.format(getpass.getuser()))
+
+ 
+
+    # Fechar aba de Download
+
+    browser.switch_to.window(browser.window_handles[-1])
+
+    browser.close()
+
+ 
+
+    browser.switch_to.window(browser.window_handles[-1])
+
+    browser.get('<path>')
+
+    time.sleep(1)
+
+ 
+
+ 
+
+#auto_vol()
+
+browser.quit()
+
+ 
+
+ 
+
+ 
+
+ 
+
+# Salvar planilha de saida
+
+df[['CNPJ', 'Status']].to_excel(r'<path>\Status_saida.xlsx'.format(getpass.getuser()), index=False)
+
+ 
+
+ 
+
