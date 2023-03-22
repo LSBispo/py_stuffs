@@ -1,0 +1,1974 @@
+import pandas as pd
+
+from selenium.webdriver.common.by import By
+
+from selenium.webdriver.common.keys import Keys
+
+from time import strftime
+
+pd.options.mode.chained_assignment = None
+
+import pandas as pd
+
+import time
+
+from selenium import webdriver
+
+from selenium.webdriver.support.ui import WebDriverWait
+
+from selenium.webdriver.support import expected_conditions as ec
+
+from tkinter import filedialog
+
+from tkinter import messagebox
+
+from tkinter import *
+
+pd.options.mode.chained_assignment = None
+
+import getpass
+
+ 
+
+ 
+
+ 
+
+def botao():
+
+    root = Tk()
+
+    root.title("Login PFI")
+
+    root.geometry("300x110")
+
+ 
+
+    def Ok():
+
+        global uname
+
+        global password
+
+ 
+
+        uname = e1.get()
+
+        password = e2.get()
+
+ 
+
+        root.destroy()
+
+ 
+
+ 
+
+    def on_closing():
+
+        if messagebox.askokcancel("Sair", "Você deseja sair?\nIsso irá parar o programa"):
+
+            root.destroy()
+
+ 
+
+            exit()
+
+ 
+
+ 
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
+ 
+
+ 
+
+    def func(event):
+
+        global uname
+
+        global password
+
+ 
+
+        uname = e1.get()
+
+        password = e2.get()
+
+ 
+
+        root.destroy()
+
+    root.bind('<Return>', func)
+
+ 
+
+    global e1
+
+    global e2
+
+ 
+
+    Label(root, text="Funcional").place(x=10, y=10)
+
+    Label(root, text="Senha").place(x=10, y=40)
+
+    Label(root, text="Pressione ENTER ou clique em Login").place(x=10, y=70)
+
+ 
+
+    e1 = Entry(root)
+
+    #e1.insert(END, 'default text')
+
+    e1.place(x=140, y=10)
+
+ 
+
+    e2 = Entry(root)
+
+    e2.place(x=140, y=40)
+
+    e2.config(show="*")
+
+ 
+
+    Button(root, text="Login", command=Ok,height=1, width=5).place(x=220, y=70)
+
+    root.mainloop()
+
+ 
+
+def botao_escolha():
+
+    root = Tk()
+
+    root.title("Escolher tipo")
+
+    root.geometry("300x170")
+
+ 
+
+    def resgateDia():
+
+        print("Resgates do Dia")
+
+        global condicao
+
+        condicao = "a"
+
+        root.destroy()
+
+ 
+
+    def resgateDt():
+
+        print("Resgates Data Valor")
+
+ 
+
+        global condicao
+
+        condicao = "b"
+
+        root.destroy()
+
+ 
+
+    def estornoResgat():
+
+        print("Estorno Resgates")
+
+ 
+
+        global condicao
+
+        condicao = "c"
+
+        root.destroy()
+
+ 
+
+    def estornoAplic():
+
+        print("Estorno Aplicações")
+
+ 
+
+        global condicao
+
+        condicao = "d"
+
+        root.destroy()
+
+ 
+
+    def on_closing():
+
+        if messagebox.askokcancel("Sair", "Você deseja sair?\nIsso irá parar o programa"):
+
+            root.destroy()
+
+            exit()
+
+ 
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+    Button(root, text="Resgates do Dia", command=resgateDia,height=1, width=25).place(x=60, y=20)
+
+    Button(root, text="Resgates Data Valor", command=resgateDt, height=1, width=25).place(x=60, y=60)
+
+    Button(root, text="Estorno Resgates", command=estornoResgat, height=1, width=25).place(x=60, y=100)
+
+    Button(root, text="Estorno Aplicações", command=estornoAplic, height=1, width=25).place(x=60, y=140)
+
+    #Button(root, text="Upload no SCDC", command=botao_login, height=1, width=25).place(x=60, y=100)
+
+    root.mainloop()
+
+ 
+
+ 
+
+botao()
+
+botao_escolha()
+
+# breakpoint()
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+# cabeçalho para
+
+chrome_options = webdriver.ChromeOptions()
+
+flags_i_want = ['cookies-without-same-site-must-be-secure@2', 'same-site-by-default-cookies@2']
+
+chromeLocalStatePrefs = {'browser.enabled_labs_experiments': flags_i_want}
+
+chrome_options.add_experimental_option('localState', chromeLocalStatePrefs)
+
+ 
+
+ 
+
+# caminho do chromedrive, site e label=nome do site na aba
+
+browser = webdriver.Chrome(executable_path=r'<path>')
+
+browser.get('<path>)
+#assert '..:: Tela de Autenticação de Usuários ::..'.strip() in browser.title.strip()
+
+#browser.switch_to.frame('iframePaginas')
+
+ 
+
+ 
+
+# Logar - Usuario e senha - SUBSTITUIR PELO # esperar usuario logar
+
+browser.find_element_by_xpath("/html/body/div[4]/form/table/tbody/tr[1]/td[2]/input").send_keys(uname)     #usuario
+
+browser.find_element_by_xpath("/html/body/div[4]/form/table/tbody/tr[2]/td[2]/input").send_keys(password)  #senha
+
+browser.find_element_by_xpath("/html/body/div[4]/form/table/tbody/tr[3]/td[2]/button").click()
+
+ 
+
+ 
+
+# Continuar
+
+browser.find_element_by_xpath("/html/body/div/div[2]/button[2]").click()
+
+browser.switch_to.frame('iframePaginas')
+
+ 
+
+ 
+
+ 
+
+ 
+
+# ler excel
+
+x1 = pd.ExcelFile(r'<path>))
+
+ 
+
+# lê os dados e armazena em dataFr  ame
+
+df = x1.parse("Sheet1")
+
+# Coluna do Status
+
+df['Status'] = ""
+
+ 
+
+# Criar bota de login, de resgate do dia, data valor, estorno pendete, estorno de resgate e estorno do dia
+
+ 
+
+ 
+
+ 
+
+for row, dfr in df.iterrows():
+
+ 
+
+ 
+
+    def resgateDoDia():
+
+        agencia = dfr['Agência']
+
+        conta = dfr['Conta']
+
+        dac = dfr['DAC']
+
+        valor_bruto = dfr['Valor Solic.']
+
+        fundo = dfr['Fundo']
+
+        total = str(dfr['Nome Operação']).strip()
+
+ 
+
+ 
+
+        # 02 - Aplicação do dia
+
+        
+
+ 
+
+        # teste prints
+
+        print(agencia)
+
+        print(conta)
+
+        print(dac)
+
+        print(fundo)
+
+        print(total)
+
+ 
+
+        # Espera
+
+        wait = WebDriverWait(browser, 900)
+
+        element = wait.until(ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_txtAGENCIA')))
+
+ 
+
+ 
+
+        agencia = str(dfr['Agência'])
+
+        print(len(agencia))
+
+        tamanho_agencia = len(agencia)
+
+ 
+
+ 
+
+        # Conta e agencia
+
+        if tamanho_agencia == 3 or tamanho_agencia == 2:
+
+            if tamanho_agencia == 2:
+
+                print("Colocar 2 zeros ")
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    "00" + agencia)
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    int(agencia))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                    int(conta))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                    int(dac))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+ 
+
+            if tamanho_agencia == 3:
+
+                print("\nprecisa colocar 1 zeros no começo")
+
+                browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    "0" + agencia)
+
+                browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    int(agencia))
+
+                browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                    int(conta))
+
+                browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                    int(dac))
+
+                browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+        else:
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                int(agencia))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                int(conta))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                int(dac))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+        # Fundo
+
+        element1 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]')))
+
+ 
+
+        # mandar numero do fundo esta com "bug"
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]").click()
+
+        time.sleep(1)
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]").send_keys(fundo)
+
+ 
+
+        # Buscar fundo
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[5]").click()
+
+ 
+
+        # Selecionar
+
+        element2 = wait.until(ec.visibility_of_element_located((By.XPATH,
+
+                                                                '/html/body/form/div[3]/div[1]/div/div[2]/fieldset/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[1]/a')))
+
+        browser.find_element_by_xpath(
+
+            "/html/body/form/div[3]/div[1]/div/div[2]/fieldset/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[1]/a").click()
+
+ 
+
+        #print(data_cota)
+
+ 
+
+       #element1 = wait.until(ec.visibility_of_element_located((By.XPATH,                                                             '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td/input[1]')))
+
+ 
+
+        # valor site
+
+        print(valor_bruto)
+
+        # valor_str = str(valor_bruto)
+
+        # valorfinal = (valor_str[0:valor_str.find('.')])
+
+ 
+
+        valorfinal = str(valor_bruto).replace('.', ',')
+
+        #datafinal = str(data_cota).replace('/', '')
+
+        #breakpoint()
+
+ 
+
+ 
+
+ 
+
+        # breakpoint()
+
+        # data
+
+ 
+
+        #element2 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[1]/input[1]')))
+
+        #print(datafinal)
+
+        #browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[1]/input[1]").send_keys(Keys.LEFT_CONTROL, Keys.LEFT)
+
+        #browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[1]/input[1]").send_keys(datafinal)
+
+        # breakpoint()
+
+        element6 = wait.until(ec.visibility_of_element_located(
+
+            (By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div/input[1]')))
+
+ 
+
+        if  "RESGATE TOTAL" in total:
+
+            print("resgate total")
+
+ 
+
+            browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div/input[1]").send_keys(password)
+
+        else:
+
+            print(valorfinal)
+
+            browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[2]").click()
+
+            browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[3]").send_keys(
+
+                valorfinal)
+
+            # senha
+
+ 
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[2]/input[1]").send_keys(password)
+
+ 
+
+ 
+
+ 
+
+ 
+
+        # breakpoint()
+
+ 
+
+        # Clicar em Confirmar e tirar print
+
+        element3 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[10]')))
+
+        print("finalizar a demanda")
+
+        time.sleep(2)
+
+        # break
+
+        # breakpoint()
+
+        # browser.find_elements_by_id("ctl00_ContentPlaceHolder1_btnConfirmar").click
+
+ 
+
+ 
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[10]").click()
+
+ 
+
+ 
+
+        # confirmar2 = browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/input[1]")
+
+        # print(confirmar2)
+
+        #
+
+        # if confirmar2 == "/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]":
+
+        #     browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").click()
+
+        # else:
+
+        #     browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/input[1]")
+
+ 
+
+        # Clicar no confirmar
+
+        element4 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]')))
+
+        # browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").submit()
+
+        time.sleep(1.5)
+
+        # browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[2]").click()
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").send_keys(Keys.ENTER)
+
+ 
+
+        # ctl00_ContentPlaceHolder1_lblMensagem
+
+ 
+
+        element4 = wait.until(ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_lblMensagem')))
+
+        browser.save_screenshot("Contabil ResgateDoDia_{}_{}-{}_{}__{}.png".format(agencia, conta, dac, valorfinal, strftime("%H%M%S")))
+
+ 
+
+    def resgateDataValor():
+
+        agencia = dfr['Agência']
+
+        conta = dfr['Conta']
+
+        dac = dfr['DAC']
+
+        data_cota = dfr['Data Digitação'].strftime('%d/%m/%Y')
+
+        # data_andreia = pd.to_datetime(dfr["considerar esta data"]).strftime('%d/%m/%Y')
+
+        valor_bruto = dfr['Valor Solic.']
+
+        fundo = dfr['Fundo']
+
+        total = str(dfr['Nome Operador']).strip()
+
+ 
+
+ 
+
+        # 02 - Aplicação Data valor
+
+        # browser.execute_script(r"javascript:parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=AplicacaoInicial', 'Passivo de Fundos >> Operações Cotista Itaú >> Aplicação - Contábil >> Aplicação Inicial Itaú');")
+
+        browser.execute_script(r"javascript: parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=ResgateDV','Passivo de Fundos >> Operações Cotista Itaú >> Resgate - Contábil >> Resgate Data Valor Itaú');")
+
+        #browser.execute_script(r"javascript: parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=Resgate', 'Passivo de Fundos >> Operações Cotista Itaú >> Resgate - Contábil >> Resgate Itaú');")
+
+ 
+
+        print(agencia)
+
+        print(conta)
+
+        print(dac)
+
+        print(data_cota)
+
+        print(fundo)
+
+        print(total)
+
+ 
+
+        # breakpoint()
+
+ 
+
+        wait = WebDriverWait(browser, 900)
+
+        element = wait.until(ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_txtAGENCIA')))
+
+ 
+
+        # time.sleep(6)
+
+        # browser.switch_to.frame('iframePaginas')
+
+        # Conta e agencia
+
+        # gestor
+
+        agencia = str(dfr['Agência'])
+
+        print(len(agencia))
+
+ 
+
+        tamanho_agencia = len(agencia)
+
+ 
+
+        # Conta e agencia
+
+        # Conta e agencia
+
+        # Conta e agencia
+
+        if tamanho_agencia == 3 or tamanho_agencia == 2:
+
+            if tamanho_agencia == 2:
+
+                print("Colocar 2 zeros ")
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    "00" + agencia)
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    int(agencia))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                    int(conta))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                    int(dac))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+ 
+
+            if tamanho_agencia == 3:
+
+                print("\nprecisa colocar 1 zeros no começo")
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    "0" + agencia)
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    int(agencia))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                    int(conta))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                    int(dac))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+        else:
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                int(agencia))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                int(conta))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                int(dac))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+ 
+
+ 
+
+ 
+
+ 
+
+        # Fundo
+
+        # browser.switch_to.frame('iframePaginas')
+
+        element1 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]')))
+
+ 
+
+        # mandar numero do fundo esta com "bug"
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]").click()
+
+        time.sleep(1)
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]").send_keys(fundo)
+
+ 
+
+        # Buscar fundo
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[5]").click()
+
+ 
+
+        # Selecionar
+
+        element2 = wait.until(ec.visibility_of_element_located((By.XPATH,
+
+                                                                '/html/body/form/div[3]/div[1]/div/div[2]/fieldset/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[1]/a')))
+
+        browser.find_element_by_xpath(
+
+            "/html/body/form/div[3]/div[1]/div/div[2]/fieldset/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[1]/a").click()
+
+ 
+
+        print(data_cota)
+
+ 
+
+        #element1 = wait.until(ec.visibility_of_element_located((By.XPATH,                                                             '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td/input[1]')))
+
+ 
+
+        # valor site
+
+        print(valor_bruto)
+
+        # valor_str = str(valor_bruto)
+
+        # valorfinal = (valor_str[0:valor_str.find('.')])
+
+ 
+
+        valorfinal = str(valor_bruto).replace('.', ',')
+
+        datafinal = str(data_cota).replace('/', '')
+
+        #breakpoint()
+
+ 
+
+ 
+
+ 
+
+        # breakpoint()
+
+        # data
+
+ 
+
+        element2 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[1]/input[1]')))
+
+        print(datafinal)
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[1]/input[1]").send_keys(Keys.LEFT_CONTROL, Keys.LEFT)
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[1]/input[1]").send_keys(datafinal)
+
+        # breakpoint()
+
+ 
+
+        if  "RESGATE TOTAL" in total:
+
+            print("resgate total")
+
+            browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[2]/input[1]").send_keys(password)
+
+        else:
+
+            print(valorfinal)
+
+            browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[2]").click()
+
+            browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[3]").send_keys(
+
+                valorfinal)
+
+            # senha
+
+ 
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div[3]/fieldset/div[2]/input[1]").send_keys(password)
+
+ 
+
+ 
+
+ 
+
+ 
+
+        # breakpoint()
+
+ 
+
+        # Clicar em Confirmar e tirar print
+
+        element3 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[10]')))
+
+        print("finalizar a demanda")
+
+        time.sleep(2)
+
+        # break
+
+        # breakpoint()
+
+        # browser.find_elements_by_id("ctl00_ContentPlaceHolder1_btnConfirmar").click
+
+ 
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[10]").click()
+
+ 
+
+        # confirmar2 = browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/input[1]")
+
+        # print(confirmar2)
+
+        #
+
+        # if confirmar2 == "/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]":
+
+        #     browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").click()
+
+        # else:
+
+        #     browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/input[1]")
+
+        # breakpoint()
+
+ 
+
+ 
+
+        # Clicar no confirmar
+
+        element4 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]')))
+
+        # browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").submit()
+
+        time.sleep(1.5)
+
+        # browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[2]").click()
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").send_keys(Keys.ENTER)
+
+ 
+
+        # ctl00_ContentPlaceHolder1_lblMensagem
+
+ 
+
+        element4 = wait.until(ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_lblMensagem')))
+
+        browser.save_screenshot("ContabilResgateDataValor_{}_{}-{}_{}__{}.png".format(agencia, conta, dac, valorfinal, strftime("%H%M%S")))
+
+ 
+
+    def estornoResgate():
+
+ 
+
+        # Inclusao cota
+
+        # browser.execute_script(r"javascript:parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=Resgate', 'Passivo de Fundos >> Operações Cotista Itaú >> Resgate - Contábil >> Resgate Itaú');")
+
+        # browser.execute_script(r"javascript:parent.AbrirPagina('\PassivoFundos\\OperacoesCotacoes\\UIIncluirCotas.aspx', 'Passivo de Fundos >> Cadastro Produto >> Cotas >> Inclusão de Cota');")
+
+        # href = "javascript:parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=EstornoResgate', 'Passivo de Fundos >> Operações Cotista Itaú >> Cancelamentos e Estornos >> Estorno Resgate Itaú');"
+
+        browser.execute_script(r"javascript:parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=EstornoResgate', 'Passivo de Fundos >> Operações Cotista Itaú >> Cancelamentos e Estornos >> Estorno Resgate Itaú');")
+
+        # browser.execute_script(r"javascript:parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=EstornoMovPendente', 'Passivo de Fundos >> Operações Cotista Itaú >> Cancelamentos e Estornos >> Estorno Movimento Pendente Itaú');;")
+
+        # browser.execute_script(r"javascript:parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=EstornoAplicacao', 'Passivo de Fundos >> Operações Cotista Itaú >> Cancelamentos e Estornos >> Estorno Aplicação Itaú');")
+
+ 
+
+        agencia = dfr['Agência']
+
+        conta = dfr['Conta']
+
+        dac = dfr['DAC']
+
+        fundo = dfr['Fundo']
+
+ 
+
+        # subconta = dfr['SUBCONTA']
+
+ 
+
+        valor_bruto = dfr['Valor Bruto']
+
+        #TODO  verificar as colunas da data  digitacao e data cota, se resgate tem q ler a coluna de digitacao ou a de cota
+
+ 
+
+        data_cota = dfr['Data Rotina'].strftime('%d/%m/%Y')
+
+ 
+
+        print(agencia)
+
+        print(conta)
+
+        print(dac)
+
+        print(fundo)
+
+        print(valor_bruto)
+
+ 
+
+        wait = WebDriverWait(browser, 900)
+
+        element = wait.until(ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_txtAGENCIA')))
+
+ 
+
+        # time.sleep(15)
+
+        # time.sleep(6)
+
+        # browser.switch_to.frame('iframePaginas')
+
+        print("aqui 8 ")
+
+        # breakpoint()  # Ok
+
+ 
+
+        # gestor
+
+        agencia = str(dfr['Agência'])
+
+        print(len(agencia))
+
+ 
+
+        tamanho_agencia = len(agencia)
+
+ 
+
+        # Conta e agencia
+
+        if tamanho_agencia == 3 or tamanho_agencia == 2:
+
+            if tamanho_agencia == 2:
+
+                print("Colocar 2 zeros ")
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    "00" + agencia)
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    int(agencia))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                    int(conta))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                    int(dac))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+ 
+
+            if tamanho_agencia == 3:
+
+                print("\nprecisa colocar 1 zeros no começo")
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    "0" + agencia)
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    int(agencia))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                    int(conta))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                    int(dac))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+        else:
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                int(agencia))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                int(conta))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                int(dac))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+ 
+
+        # breakpoint()
+
+ 
+
+        # Fundo
+
+        # browser.switch_to.frame('iframePaginas')
+
+        element1 = wait.until(
+
+            ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]')))
+
+ 
+
+        # mandar numero do fundo esta com "bug"
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]").click()
+
+        time.sleep(1)
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]").send_keys(fundo)
+
+ 
+
+        # Buscar fundo
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[5]").click()
+
+ 
+
+        # Selecionar
+
+        element2 = wait.until(ec.visibility_of_element_located((By.XPATH,
+
+                                                                '/html/body/form/div[3]/div[1]/div/div[2]/fieldset/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[1]/a')))
+
+        browser.find_element_by_xpath(
+
+            "/html/body/form/div[3]/div[1]/div/div[2]/fieldset/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[1]/a").click()
+
+ 
+
+        # verificar sub conta
+
+ 
+
+        # Consulta
+
+        element3 = wait.until(
+
+            ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]')))
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").click()
+
+ 
+
+        # time.sleep(3)
+
+        element4 = wait.until(
+
+            ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[4]/fieldset/legend')))
+
+        # Olha na lista para ver se acha o resgate
+
+        # Achar valor na pagina
+
+        # breakpoint()
+
+        # valorfinal = str(valor_bruto).replace('.', ',')
+
+ 
+
+        # valorfinal = int(valor_bruto)
+
+        valorfinal = valor_bruto
+
+        print(valorfinal)
+
+ 
+
+        # formatar se for inteiro, ou seja ,00
+
+        if isinstance(valorfinal, int):
+
+            print("INTEIRO")
+
+            print(valorfinal)
+
+            currency = str(valorfinal) + ",00"
+
+            thousands_separator = "."
+
+            fractional_separator = ","
+
+            currency = "{:,.2f}".format(valorfinal)
+
+            if thousands_separator == ".":
+
+                main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                new_main_currency = main_currency.replace(",", ".")
+
+                currency = new_main_currency + fractional_separator + fractional_currency
+
+                print("\n")
+
+                print(currency)
+
+ 
+
+        # formatar se for flot, ou seja ,23
+
+        if isinstance(valorfinal, float):
+
+            print("quebrado")
+
+            thousands_separator = "."
+
+            fractional_separator = ","
+
+            currency = "{:,.2f}".format(valorfinal)
+
+            if thousands_separator == ".":
+
+                main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                new_main_currency = main_currency.replace(",", ".")
+
+                currency = new_main_currency + fractional_separator + fractional_currency
+
+                print(currency)
+
+ 
+
+        currency1 = currency.replace(".", "")
+
+        currency1 = currency1.replace(",", "")
+
+        # breakpoint()
+
+        print("\n")
+
+        print(currency)
+
+        print("\n")
+
+        print(currency1)
+
+ 
+
+        # breakpoint()
+
+ 
+
+        print("\n")
+
+ 
+
+        achar = browser.find_element_by_xpath("//*[.='" + currency + "']")
+
+        print("achar={}".format(currency))
+
+ 
+
+        # Ler a tabela da pagina
+
+        # linhas = browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/div/table/tbody")
+
+        linhas = browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/table/tbody/tr/td/div/table")  # para resgates
+
+        # linhas = browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/div/table")  # para aplicacao
+
+ 
+
+        i = 0
+
+ 
+
+        print("comecar for")
+
+        # Contar as linhas da pagina, para saber onde o valor esta
+
+        for row1 in linhas.find_elements_by_xpath(".//tr"):
+
+            i += 1
+
+ 
+
+            # Quando achar o valor, clicar no XPATH relativo ao numero que ele contou das linhas na tabela
+
+            if (achar.text in row1.text) and (data_cota in row1.text):
+
+                print("TEM")
+
+                print(i)
+
+ 
+
+                element5 = wait.until(ec.visibility_of_element_located(
+
+                    (By.XPATH, '/html/body/form/div[3]/div[1]/div/div[4]/fieldset/legend')))
+
+                # breakpoint()
+
+ 
+
+                # Clicar no selecionar ESSA É DE ESTORNO DE APLICAÇÃO
+
+                # browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/div/table/tbody/tr[{}]/td[1]/a".format(i)).click()
+
+ 
+
+                # essa é de mov pendente
+
+                # browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/div/table/tbody/tr[{}]/td[1]/a".format(i)).click()
+
+ 
+
+                # Clicar no selecionar ESSA É DE ESTORNO DE RESGATE
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div[4]/fieldset/table/tbody/tr/td/div/table/tbody/tr[{}]/td[1]/a".format(
+
+                        i)).click()
+
+ 
+
+                # browser.find_element_by_xpath(
+
+                #     "/html/body/form/div[3]/div[1]/div/div[4]/fieldset/div/table/tbody/tr[{}]/td[1]/a".format(
+
+                #         i)).click()
+
+ 
+
+ 
+
+ 
+
+ 
+
+                # breakpoint()
+
+                # Clicar no confirmar e finalizar voltar para o inicio
+
+                time.sleep(1.5)
+
+                # element6 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]')))
+
+                browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").click()
+
+ 
+
+                dataformato = str(data_cota).replace("/", ".")
+
+                # Tirar prints
+
+                element4 = wait.until(
+
+                    ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_lblMensagem')))
+
+                browser.save_screenshot(
+
+                    "Estorno_Resgate_{}_{}-{}_{}-{}__{}.png".format(agencia, conta, dac, valorfinal, dataformato,
+
+                                                                      strftime("%H%M%S")))
+
+                break
+
+ 
+
+ 
+
+ 
+
+    def estornoAplicacao():
+
+        print("Entrar estorno\n")
+
+        time.sleep(0.7)
+
+        browser.execute_script(
+
+            r"javascript:parent.AbrirPagina('\PassivoFundos\\Util\\UIIdentificacaoContaCorrente.aspx?idFluxo=EstornoAplicacao', 'Passivo de Fundos >> Operações Cotista Itaú >> Cancelamentos e Estornos >> Estorno Aplicação Itaú');")
+
+ 
+
+        agencia = dfr['Agência']
+
+        conta = dfr['Conta']
+
+        dac = dfr['DAC']
+
+        fundo = dfr['Fundo']
+
+ 
+
+        # subconta = dfr['SUBCONTA']
+
+ 
+
+        valor_bruto = dfr['Valor Aplic.']
+
+        data_cota = dfr['Data Digitação'].strftime('%d/%m/%Y')
+
+ 
+
+        print(agencia)
+
+        print(conta)
+
+        print(dac)
+
+        print(fundo)
+
+        print(valor_bruto)
+
+ 
+
+        wait = WebDriverWait(browser, 900)
+
+        element = wait.until(ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_txtAGENCIA')))
+
+ 
+
+        # time.sleep(15)
+
+        # time.sleep(6)
+
+        # browser.switch_to.frame('iframePaginas')
+
+        print("aqui 8 ")
+
+        # breakpoint()  # Ok
+
+ 
+
+        # gestor
+
+        agencia = str(dfr['Agência'])
+
+        print(len(agencia))
+
+ 
+
+        tamanho_agencia = len(agencia)
+
+ 
+
+        # Conta e agencia
+
+        if tamanho_agencia == 3 or tamanho_agencia == 2:
+
+            if tamanho_agencia == 2:
+
+                print("Colocar 2 zeros ")
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    "00" + agencia)
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    int(agencia))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                    int(conta))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                    int(dac))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+ 
+
+            if tamanho_agencia == 3:
+
+                print("\nprecisa colocar 1 zeros no começo")
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    "0" + agencia)
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                    int(agencia))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                    int(conta))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                    int(dac))
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+ 
+
+ 
+
+ 
+
+ 
+
+        else:
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[1]").send_keys(
+
+                int(agencia))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[4]").send_keys(
+
+                int(conta))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input[7]").send_keys(
+
+                int(dac))
+
+            browser.find_element_by_xpath(
+
+                "/html/body/form/div[3]/div[1]/div/div/fieldset/table/tbody/tr/td/table/tbody/tr[2]/td/input").click()
+
+        # breakpoint()
+
+ 
+
+        # Fundo
+
+        # browser.switch_to.frame('iframePaginas')
+
+        element1 = wait.until(
+
+            ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]')))
+
+ 
+
+        # mandar numero do fundo esta com "bug"
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]").click()
+
+        time.sleep(1)
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[1]").send_keys(fundo)
+
+ 
+
+        # Buscar fundo
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[2]/fieldset/input[5]").click()
+
+ 
+
+        # Selecionar
+
+        element2 = wait.until(ec.visibility_of_element_located((By.XPATH,
+
+                                                                '/html/body/form/div[3]/div[1]/div/div[2]/fieldset/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[1]/a')))
+
+        browser.find_element_by_xpath(
+
+            "/html/body/form/div[3]/div[1]/div/div[2]/fieldset/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td[1]/a").click()
+
+ 
+
+        # verificar sub conta
+
+ 
+
+        # Consulta
+
+        element3 = wait.until(
+
+            ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]')))
+
+        browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").click()
+
+ 
+
+        # time.sleep(3)
+
+        element4 = wait.until(
+
+            ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[4]/fieldset/legend')))
+
+        # Olha na lista para ver se acha o resgate
+
+        # Achar valor na pagina
+
+        # breakpoint()
+
+        # valorfinal = str(valor_bruto).replace('.', ',')
+
+ 
+
+        # valorfinal = int(valor_bruto)
+
+        valorfinal = valor_bruto
+
+        print(valorfinal)
+
+ 
+
+        # formatar se for inteiro, ou seja ,00
+
+        if isinstance(valorfinal, int):
+
+            print("INTEIRO")
+
+            print(valorfinal)
+
+            currency = str(valorfinal) + ",00"
+
+            thousands_separator = "."
+
+            fractional_separator = ","
+
+            currency = "{:,.2f}".format(valorfinal)
+
+            if thousands_separator == ".":
+
+                main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                new_main_currency = main_currency.replace(",", ".")
+
+                currency = new_main_currency + fractional_separator + fractional_currency
+
+                print("\n")
+
+                print(currency)
+
+ 
+
+        # formatar se for flot, ou seja ,23
+
+        if isinstance(valorfinal, float):
+
+            print("quebrado")
+
+            thousands_separator = "."
+
+            fractional_separator = ","
+
+            currency = "{:,.2f}".format(valorfinal)
+
+            if thousands_separator == ".":
+
+                main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                new_main_currency = main_currency.replace(",", ".")
+
+                currency = new_main_currency + fractional_separator + fractional_currency
+
+                print(currency)
+
+ 
+
+        currency1 = currency.replace(".", "")
+
+        currency1 = currency1.replace(",", "")
+
+        # breakpoint()
+
+        print("\n")
+
+        print(currency)
+
+        print("\n")
+
+        print(currency1)
+
+ 
+
+        # breakpoint()
+
+ 
+
+        print("\n")
+
+ 
+
+        achar = browser.find_element_by_xpath("//*[.='" + currency + "']")
+
+ 
+
+        # Ler a tabela da pagina
+
+        linhas = browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/div/table/tbody")
+
+        # linhas = browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/table/tbody/tr/td/div/table") #para resgates
+
+        i = 0
+
+ 
+
+        print("comecar for")
+
+        # Contar as linhas da pagina, para saber onde o valor esta
+
+        for row1 in linhas.find_elements_by_xpath(".//tr"):
+
+            i += 1
+
+ 
+
+            # Quando achar o valor, clicar no XPATH relativo ao numero que ele contou das linhas na tabela
+
+            if (achar.text in row1.text) and (data_cota in row1.text):
+
+                print("TEM")
+
+                print(i)
+
+ 
+
+                element5 = wait.until(ec.visibility_of_element_located(
+
+                    (By.XPATH, '/html/body/form/div[3]/div[1]/div/div[4]/fieldset/legend')))
+
+                # breakpoint()
+
+ 
+
+                # Clicar no selecionar ESSA É DE ESTORNO DE APLICAÇÃO
+
+                browser.find_element_by_xpath(
+
+                    "/html/body/form/div[3]/div[1]/div/div[4]/fieldset/div/table/tbody/tr[{}]/td[1]/a".format(
+
+                        i)).click()
+
+ 
+
+                # essa é de mov pendente
+
+                # browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[4]/fieldset/div/table/tbody/tr[{}]/td[1]/a".format(i)).click()
+
+ 
+
+                # Clicar no selecionar ESSA É DE ESTORNO DE RESGATE
+
+                # browser.find_element_by_xpath(
+
+                #     "/html/body/form/div[3]/div[1]/div/div[4]/fieldset/table/tbody/tr/td/div/table/tbody/tr[{}]/td[1]/a".format(i)).click()
+
+ 
+
+                # breakpoint()
+
+                # Clicar no confirmar e finalizar voltar para o inicio
+
+                time.sleep(1.5)
+
+                # element6 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]')))
+
+                browser.find_element_by_xpath("/html/body/form/div[3]/div[1]/div/div[3]/fieldset/input[1]").click()
+
+ 
+
+                dataformato = str(data_cota).replace("/", ".")
+
+                # Tirar prints
+
+                element4 = wait.until(
+
+                    ec.visibility_of_element_located((By.ID, 'ctl00_ContentPlaceHolder1_lblMensagem')))
+
+                browser.save_screenshot("Estorno_Aplicação_{}_{}-{}_{}-{}__{}.png".format(agencia, conta, dac, valorfinal, dataformato,strftime("%H%M%S")))
+
+ 
+
+                # browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "{}_{}_{}_{}.png".format(soc, tipo, currency, strftime("%H%M%S"))))
+
+ 
+
+                break
+
+ 
+
+ 
+
+    if condicao == "a":
+
+        resgateDoDia()
+
+ 
+
+    if condicao == "b":
+
+        resgateDataValor()
+
+ 
+
+    if condicao == "c":
+
+        estornoResgate()
+
+ 
+
+    if condicao == "d":
+
+        estornoAplicacao()
