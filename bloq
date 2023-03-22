@@ -1,0 +1,1753 @@
+import pandas as pd
+
+import time
+
+from selenium import webdriver
+
+from selenium.webdriver.common.by import By
+
+from selenium.webdriver.common.keys import Keys
+
+from selenium.webdriver.support.ui import WebDriverWait
+
+from selenium.webdriver.support import expected_conditions as ec
+
+from time import strftime
+
+import os
+
+from tkinter import *
+
+import getpass
+
+from tkinter import messagebox
+
+import glob
+
+ 
+
+import sys
+
+ 
+
+pd.options.mode.chained_assignment = None
+
+ 
+
+# cronometrar tempo da execução
+
+start = time.time()
+
+ 
+
+def botao():
+
+    root = Tk()
+
+    root.title("Login Painel de Serviço")
+
+    root.geometry("300x110")
+
+ 
+
+    def Ok():
+
+        global uname
+
+        global password
+
+ 
+
+        uname = e1.get()
+
+        password = e2.get()
+
+ 
+
+        root.destroy()
+
+ 
+
+ 
+
+    def on_closing():
+
+        if messagebox.askokcancel("Sair", "Você deseja sair?\nIsso irá parar o programa"):
+
+            root.destroy()
+
+ 
+
+            exit()
+
+ 
+
+ 
+
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
+ 
+
+ 
+
+    def func(event):
+
+        global uname
+
+        global password
+
+ 
+
+        uname = e1.get()
+
+        password = e2.get()
+
+ 
+
+        root.destroy()
+
+    root.bind('<Return>', func)
+
+ 
+
+    global e1
+
+    global e2
+
+ 
+
+    Label(root, text="Funcional").place(x=10, y=10)
+
+    Label(root, text="Senha").place(x=10, y=40)
+
+    Label(root, text="Pressione ENTER ou clique em Login").place(x=10, y=70)
+
+ 
+
+    e1 = Entry(root)
+
+    #e1.insert(END, 'default text')
+
+    e1.place(x=140, y=10)
+
+ 
+
+    e2 = Entry(root)
+
+    e2.place(x=140, y=40)
+
+    e2.config(show="*")
+
+ 
+
+    Button(root, text="Login", command=Ok,height=1, width=5).place(x=220, y=70)
+
+    root.mainloop()
+
+ 
+
+# Login botao
+
+botao()
+
+ 
+
+# cabeçalho para rodar
+
+chrome_options = webdriver.ChromeOptions()
+
+flags_i_want = ['cookies-without-same-site-must-be-secure@2', 'same-site-by-default-cookies@2']
+
+chromeLocalStatePrefs = {'browser.enabled_labs_experiments': flags_i_want}
+
+chrome_options.add_experimental_option('localState', chromeLocalStatePrefs)
+
+ 
+
+# caminho do chromedrive, site e label=nome do site na aba
+
+
+ 
+
+ 
+
+# esperar usuario logar
+
+usuario = browser.find_element_by_id("UserName").send_keys(uname)
+
+senha = browser.find_element_by_id("Password").send_keys(password)
+
+entrar = browser.find_element_by_id("btnEntrar").click()
+
+ 
+
+# Ir para # Operações internas de fundos - Terceiros #nova aba
+
+
+browser.switch_to.window(browser.window_handles[-1])
+
+ 
+
+# Setar senha e orgao fora do for
+
+conta = "4190"
+
+agencia = "417677"
+
+conta_agencia_final = conta + agencia
+
+browser.find_element_by_id("AgenciaContaDAC_Agencia").send_keys(conta_agencia_final)
+
+ 
+
+# ler e selecionar o codigo
+
+codigo = "990009"
+
+browser.execute_script("ListaEmpresasX0()")
+
+browser.find_element_by_id("txtFiltroListaEmpresasX0").send_keys(codigo)
+
+browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/div/div/table/tbody/tr/td[1]/input").click()
+
+browser.find_element_by_id("_btnConfirmarHelperEmpresas").click()
+
+browser.find_element_by_id("Processar").click()
+
+ 
+
+# Digitar a senha e Orgao
+
+browser.find_element_by_id("Senha").send_keys(password)
+
+browser.find_element_by_id("Orgao").send_keys("6717")
+
+browser.find_element_by_id("Confirmar").click()
+
+ 
+
+wait = WebDriverWait(browser, 20)
+
+element = wait.until(ec.invisibility_of_element((By.XPATH, '/html/body/div[9]/div[3]/div/button[1]/span')))
+
+ 
+
+# Ir para # Operações internas de fundos - Terceiros #
+
+
+ 
+
+# ler excel
+
+x1 = pd.ExcelFile(r'C:\Users\{}\Downloads\SOCs Automação\Base.xlsx'.format(getpass.getuser()))
+
+ 
+
+# lê os dados e armazena em dataFrame
+
+df = x1.parse("Sheet1")
+
+ 
+
+# Coluna do Status
+
+df['Status'] = ""
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+def olhar_observacao():
+
+    #try:
+
+    # Achar valor na pagina
+
+    achar = browser.find_element_by_xpath("//*[.='" + currency + "']")
+
+ 
+
+    # Ler a tabela da pagina
+
+    linhas = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/table/tbody")
+
+ 
+
+    i = 0
+
+ 
+
+ 
+
+    # Colocar a Observação
+
+   obs = dfr['Protocolo']
+
+ 
+
+    ##print(f"It's pd.isna  : {pd.isna(obs)}")
+
+ 
+
+    if pd.isna(obs):
+
+        #print("nao tem nada")
+
+ 
+
+        for row1 in linhas.find_elements_by_xpath(".//tr"):
+
+            i += 1
+
+            comentario = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/table/tbody/tr[{}]/input[1]".format(i)).get_attribute("value")
+
+ 
+
+            try:
+
+ 
+
+                # Quando achar o valor, clicar no XPATH relativo ao numero que ele contou das linhas na tabela
+
+                if achar.text in row1.text:
+
+                    #print("TEM")
+
+ 
+
+                    # Clicar na linha referente ao valor
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/table/tbody/tr[{}]/td[6]/button".format(i)).click()
+
+ 
+
+                    # Verificar se tem BacenJud no "Motivo/Observação"
+
+                    obs_site = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[4]/input").get_attribute("value")
+
+                    #print(str(obs_site).lower())
+
+                    #print("\n")
+
+                    # #print(obs_site.text)
+
+                    bacen_cota = str(obs_site).lower()
+
+ 
+
+                    if "bacenjud" in bacen_cota:
+
+                        #print("tem bacenjud")
+
+                        df.loc[row, 'Status'] = "Falhou Bacenjud no motivo"
+
+                        # Scroll down e tirar #print
+
+                        browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(Keys.PAGE_DOWN)
+
+                        time.sleep(0.5)
+
+                        browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc),"FALHA BACENJUD_{}_{}_{}_{}.png".format(soc, tipo, currency,strftime("%H%M%S"))))
+
+                        break
+
+ 
+
+                    # Clicar em Processar
+
+                    element11 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input[1]')))
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input[1]").click()
+
+ 
+
+                    # Scroll down e tirar #print
+
+                    element3 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/div[2]')))
+
+                    # efe = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/div[2]")
+
+                    # #print("\nagora\n")
+
+                    # #print(efe)
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(Keys.PAGE_DOWN)
+
+                    # time.sleep(6)
+
+ 
+
+                    element4 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/div[2]/ul/li')))
+
+ 
+
+                    browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "{}_{}_{}_{}.png".format(soc, tipo, currency, x)))
+
+ 
+
+ 
+
+ 
+
+                    #verificar se o print existe
+
+                    # variavel com o nome do print, antes de tentar salvar o arquivo
+
+                    ultimo_arquivo = ("{}_{}_{}_{}.png".format(soc, tipo, currency, x))
+
+ 
+
+ 
+
+ 
+
+                    # verificar se arquivo existe
+
+                    #verificar_print()
+
+ 
+
+                    df.loc[row, 'Status'] = "OK"
+
+                    break
+
+            except:
+
+                e = "erro ultimo"
+
+                # print(e)
+
+                df.loc[row, 'Status'] = "Falhou quantidade de cota não encontrada"
+
+                browser.save_screenshot(
+
+                    os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc),
+
+                                 "Falhou quantidade de cota não encontrada_{}_{}_{}_{}.png".format(soc, tipo,
+
+                                                                                                   currency,
+
+                                                                                                   strftime(
+
+                                                                                                       "%H%M%S"))))
+
+ 
+
+        #12345661
+
+ 
+
+    obs = str(dfr['Protocolo'])
+
+ 
+
+    # Contar as linhas da pagina, para saber onde o valor esta
+
+    for row1 in linhas.find_elements_by_xpath(".//tr"):
+
+        i += 1
+
+        comentario = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/table/tbody/tr[{}]/input[1]".format(i)).get_attribute("value")
+
+ 
+
+ 
+
+        try:
+
+            # Quando achar o valor, clicar no XPATH relativo ao numero que ele contou das linhas na tabela
+
+            if (achar.text in row1.text) and (obs in comentario):
+
+                #print("TEM")
+
+ 
+
+                # Clicar na linha referente ao valor
+
+                browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/table/tbody/tr[{}]/td[6]/button".format(i)).click()
+
+ 
+
+ 
+
+ 
+
+ 
+
+                # Verificar se tem BacenJud no "Motivo/Observação"
+
+                obs_site = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[4]/input").get_attribute("value")
+
+                #print(str(obs_site).lower())
+
+                #print("\n")
+
+                # #print(obs_site.text)
+
+                bacen_cota = str(obs_site).lower()
+
+ 
+
+                if "bacenjud" in bacen_cota:
+
+                    #print("tem bacenjud")
+
+                    df.loc[row, 'Status'] = "Falhou Bacenjud no motivo"
+
+                    # Scroll down e tirar #print
+
+                    browser.find_element_by_xpath(
+
+                        "/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(
+
+                        Keys.PAGE_DOWN)
+
+                    time.sleep(0.5)
+
+                    browser.save_screenshot(
+
+                        os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc),
+
+                                     "FALHA BACENJUD_{}_{}_{}_{}.png".format(soc, tipo, currency, strftime("%H%M%S"))))
+
+                    break
+
+ 
+
+                # Clicar em Processar
+
+                element11 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input[1]')))
+
+                browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input[1]").click()
+
+ 
+
+                # Scroll down e tirar #print
+
+                element3 = wait.until(ec.visibility_of_element_located(
+
+                    (By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/div[2]')))
+
+                # efe = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/div[2]")
+
+                # #print("\nagora\n")
+
+                # #print(efe)
+
+                browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(Keys.PAGE_DOWN)
+
+                # time.sleep(6)
+
+ 
+
+                element4 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/div[2]/ul/li')))
+
+ 
+
+                browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "{}_{}_{}_{}.png".format(soc, tipo, currency, strftime("%H%M%S"))))
+
+                df.loc[row, 'Status'] = "OK"
+
+                break
+
+        except:
+
+            e = "erro ultimo"
+
+            # print(e)
+
+            df.loc[row, 'Status'] = "Falhou quantidade de cota não encontrada"
+
+            browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc),"Falhou quantidade de cota não encontrada_{}_{}_{}_{}.png".format(soc, tipo, currency, strftime("%H%M%S"))))
+
+ 
+
+    # except:
+
+    #     e = "erro ultimo"
+
+    #     #print(e)
+
+    #     df.loc[row, 'Status'] = "Falhou quantidade de cota não encontrada"
+
+    #     browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc),"Falhou quantidade de cota não encontrada_{}_{}_{}_{}.png".format(soc, tipo, currency,strftime("%H%M%S"))))
+
+ 
+
+# def verificar_print():
+
+#     # Ler o nome do ultimo arquivo criado na pasta
+
+#     list_of_files = glob.glob(pastafinal)  # * means all if need specific format then *.csv
+
+#     latest_file = max(list_of_files, key=os.path.getctime)
+
+#     print(latest_file)
+
+#
+
+#     if os.path.isfile(latest_file):
+
+#         print("Screenshot feito com sucesso")
+
+#     else:
+
+#         print("Screenshot não foi feito")
+
+#         print("Repetir Screenshot")
+
+#         browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "{}_{}_{}_{}.png".format(soc, tipo, currency, x)))
+
+#         verificar_print()
+
+ 
+
+x = 0
+
+for row, dfr in df.iterrows():
+
+ 
+
+ 
+
+ 
+
+      try:
+
+ 
+
+ 
+
+        element = wait.until(ec.visibility_of_element_located((By.ID, 'AgenciaContaDAC_Agencia')))
+
+ 
+
+        print("\n")
+
+        x += 1
+
+ 
+
+        # breakpoint()
+
+        print("Número total de demandas na planilha base: {}".format(len(df)))
+
+        print("{}/{}".format(x, len(df)))
+
+        #print(len(df))
+
+        print("\n")
+
+ 
+
+        # Colocar a Observação
+
+        soc = dfr['SOC']
+
+        caminho = r'C:\Users\{}\Downloads\SOCs Automação'.format(getpass.getuser())
+
+        # pastafinal = ("{}\{}\*.png".format(caminho, soc))
+
+        # print(pastafinal)
+
+        #print(soc)
+
+ 
+
+        # criar pasta dos SOCs
+
+        def createFolder(directory):
+
+            try:
+
+                if not os.path.exists(directory):
+
+                    os.makedirs((os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc))))
+
+            except OSError:
+
+                #print('\nError: Pasta já existe. ' + directory)
+
+                print('\n')
+
+ 
+
+ 
+
+        createFolder(soc)
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+        #Menu tela preta, para usuario acompanhar
+
+        # print("\n")
+
+        # print("Número total de demandas na planilha base: {}".format(len(df)))
+
+        # print("{}/{}".format(c, x1))
+
+        # print(len(df))
+
+        # print("\n")
+
+ 
+
+ 
+
+ 
+
+ 
+
+        #breakpoint()
+
+        #Criar excel de Status, e a cada linha escrever
+
+ 
+
+ 
+
+ 
+
+        # Ler e digitar a contna e ag
+
+        conta_agencia = dfr['Código do cotista:']
+
+        conta = conta_agencia.__str__()[:4]
+
+        agencia = conta_agencia.__str__()[6:]
+
+        conta_agencia_final = conta + agencia
+
+        browser.find_element_by_id("AgenciaContaDAC_Agencia").send_keys(conta_agencia_final)
+
+ 
+
+        # ler e selecionar o codigo
+
+        codigo = dfr['Cód do administrador:']
+
+        codigo1 = int(codigo)
+
+       browser.execute_script("ListaEmpresasX0()")
+
+        browser.find_element_by_id("txtFiltroListaEmpresasX0").send_keys(codigo1)
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/div/div/table/tbody/tr/td[1]/input").click()
+
+        browser.find_element_by_id("_btnConfirmarHelperEmpresas").click()
+
+        browser.find_element_by_id("Processar").click()
+
+        breakpoint()
+
+ 
+
+        # Colocar operacao = Bloqueio
+
+        element = wait.until(ec.visibility_of_element_located((By.ID, 'ddlOperacao')))
+
+        browser.find_element_by_id("ddlOperacao").send_keys("Bloqueio")
+
+ 
+
+        tipo = dfr['Tipo de solicitação:']
+
+ 
+
+        # antes de digitar o fundo no campo de pesquisa, olhar para ver se ele existe na pagina
+
+ 
+
+ 
+
+        if tipo == "Desbloqueio de Valor" or tipo == "Desbloqueio de Cota":
+
+            element = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul/li[2]/select/option[2]')))
+
+            browser.find_element_by_id("ddlAcao").send_keys("Desbloqueio de saldo do cotista")
+
+            browser.find_element_by_id("btnSelecionarMenuOperacoesFundosEOP").click()
+
+ 
+
+            # Verificar se o fundo tem algo dentro
+
+            time.sleep(1)
+
+            try:
+
+                aviso = browser.find_element_by_xpath("/html/body/div[8]/div[2]/div[2]")
+
+                #print(aviso.text)
+
+ 
+
+                teste = "CLIENTE NAO POSSUI"
+
+                teste2 = "NAO EXISTE SALDO DISPONIVEL"
+
+ 
+
+                if (teste in aviso.text) or (teste2 in aviso.text):
+
+                    #print("ta dentro")
+
+                    browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "Falhou Não Possui Fundos_{}_{}_{}.png".format(soc, tipo, strftime("%H%M%S"))))
+
+                    df.loc[row, 'Status'] = "Falhou Não Possui Fundos"
+
+                    continue
+
+            except:
+
+                #print("ta fora")
+
+                #print("cont.")
+
+                print(" ")
+
+ 
+
+ 
+
+ 
+
+        if tipo == "Bloqueio de Valor" or tipo == "Bloqueio de Cota":
+
+            #import pdb
+
+ 
+
+            #pdb.set_trace()
+
+ 
+
+            element = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul/li[2]/select/option[2]')))
+
+            browser.find_element_by_id("ddlAcao").send_keys("Bloquear saldo do cotista")
+
+            browser.find_element_by_id("btnSelecionarMenuOperacoesFundosEOP").click()
+
+ 
+
+            # Verificar se o fundo tem algo dentro
+
+            time.sleep(1)
+
+            try:
+
+                aviso = browser.find_element_by_xpath("/html/body/div[8]/div[2]/div[2]")
+
+                #print(aviso.text)
+
+ 
+
+                teste = "CLIENTE NAO POSSUI"
+
+                teste2 = "NAO EXISTE SALDO DISPONIVEL"
+
+ 
+
+                if (teste in aviso.text) or (teste2 in aviso.text):
+
+                    #print("ta dentro")
+
+                    browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "Falhou Não Possui Fundos_{}_{}_{}.png".format(soc, tipo, strftime("%H%M%S"))))
+
+
+                    df.loc[row, 'Status'] = "Falhou Não Possui Fundos"
+
+                    continue
+
+            except:
+
+                #print("ta fora")
+
+                #print("cont.")
+
+                print(" ")
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+        # Ler Código do Fundo e colocar no campo e clicar
+
+        # element1 = wait.until(ec.visibility_of_element_located((By.ID, 'txtFiltroListaFundosClientesHelperX0')))
+
+        fundo = dfr['Cód. do fundo:']
+
+        fundo1 = fundo.__str__()[:1]
+
+        fundo2 = fundo.__str__()[1:2]
+
+        fundo3 = fundo.__str__()[2:3]
+
+        fundo4 = fundo.__str__()[3:4]
+
+        fundo5 = fundo.__str__()[4:5]
+
+ 
+
+ 
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/ul/li[1]/input[1]").send_keys(fundo1)
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/ul/li[1]/input[1]").send_keys(fundo2)
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/ul/li[1]/input[1]").send_keys(fundo3)
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/ul/li[1]/input[1]").send_keys(fundo4)
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/ul/li[1]/input[1]").send_keys(fundo5)
+
+ 
+
+        #print(fundo1)
+
+        #print(fundo2)
+
+        #print(fundo3)
+
+        #print(fundo4)
+
+        #print(fundo5)
+
+ 
+
+        # Sub conta padrao 201
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/ul/li[1]/input[2]").send_keys("2")
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/ul/li[1]/input[2]").send_keys("0")
+
+        browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/ul/li[1]/input[2]").send_keys("1")
+
+ 
+
+        # Clicar no botao azul se o fundo existir
+
+        try:
+
+            browser.find_element_by_xpath("/html/body/div[8]/div[2]/div/div/fieldset/div/div/table/tbody/tr/td[1]/input").click()
+
+            #print("tem fundo")
+
+            browser.find_element_by_id("_btnConfirmarHelperBotaoFundos").click()
+
+        except:
+
+            #print("Nao fundo")
+
+            time.sleep(0.5)
+
+            browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc),"{}_Fundo {} não encontrado para Bloqueio, ou seja não a posição dispon. para bloqueio_{}_{}.png".format(soc, fundo, tipo, strftime("%H%M%S"))))
+
+            df.loc[row, 'Status'] = "Falhou Fundo Não Encontrado Para Bloqueio"
+
+            continue
+
+ 
+
+        # #break
+
+ 
+
+ 
+
+ 
+
+        if tipo == "Bloqueio de Cota" or tipo == "Bloqueio de Valor":   #LER OS VALORES DA COLUNA VALOR
+
+ 
+
+            # Colocar o motivo
+
+            element = wait.until(ec.visibility_of_element_located((By.ID, 'drpMotivo')))
+
+            motivo = dfr['Motivo da movimentação:']
+
+ 
+
+            if motivo == "Garantia":
+
+ 
+
+                browser.find_element_by_id("drpMotivo").send_keys("Área de Crédito")
+
+ 
+
+            else:
+
+                browser.find_element_by_id("drpMotivo").send_keys(motivo)
+
+ 
+
+            # Colocar a Observação
+
+            obs = dfr['Protocolo']
+
+ 
+
+            #time.sleep(0.9)
+
+            browser.find_element_by_id("txtObs").send_keys(obs)
+
+ 
+
+ 
+
+ 
+
+            #driver.execute_script("document.getElementById('hiRequestAccessType').checked = true;")
+
+ 
+
+            #break
+
+ 
+
+            # Verificar se o valor/quantidade é o total, entao tem q comprar o valor disponivel,
+
+            if tipo == "Bloqueio de Valor":
+
+                #print("de valor")
+
+ 
+
+ 
+
+ 
+
+                # Comparar valor/cota do site com o da planilha
+
+                valo_site = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[2]/input").get_attribute('value')
+
+                #print(valo_site)
+
+ 
+
+                valor_ou_cota = dfr['Valor ou quantidade de cotas']
+
+                #print(valor_ou_cota)
+
+ 
+
+                if isinstance(valor_ou_cota, int):
+
+                    #print("INTEIRO")
+
+                    #print(valor_ou_cota)
+
+                    currency = str(valor_ou_cota) + ",00"
+
+                    thousands_separator = "."
+
+                    fractional_separator = ","
+
+                    currency = "{:,.2f}".format(valor_ou_cota)
+
+                    if thousands_separator == ".":
+
+                        main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                        new_main_currency = main_currency.replace(",", ".")
+
+                        currency = new_main_currency + fractional_separator + fractional_currency
+
+                        #print(currency)
+
+ 
+
+                if isinstance(valor_ou_cota, float):
+
+                    thousands_separator = "."
+
+                    fractional_separator = ","
+
+                    currency = "{:,.2f}".format(valor_ou_cota)
+
+                    if thousands_separator == ".":
+
+                        main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                        new_main_currency = main_currency.replace(",", ".")
+
+                        currency = new_main_currency + fractional_separator + fractional_currency
+
+                        #print(currency)
+
+ 
+
+                currency1 = currency.replace(".", "")
+
+                currency1 = currency1.replace(",", "")
+
+ 
+
+                valo_site1 = valo_site.replace(".", "")
+
+                valo_site1 = valo_site1.replace(",", "")
+
+ 
+
+                # Des-check box da data bloq
+
+                # time.sleep(1.7)
+
+                #check_data = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[6]/input[1]").is_selected()
+
+ 
+
+                check_data = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[6]/input[4]").is_enabled()
+
+                if check_data is True:
+
+                    #print("verdade")
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[6]/input[4]").click()
+
+ 
+
+ 
+
+                #checked = driver.execute_script(("return document.getElementById('chkData').checked") % item)
+
+ 
+
+                #check_data = browser.find_elements_by_css_selector("input.p MascaraDeData")
+
+ 
+
+                #print("\n")
+
+                #print("1222222")
+
+ 
+
+               
+
+ 
+
+                #print(check_data)
+
+                # check_data = browser.find_element_by_id("chkData").send_keys("value","false")
+
+                # #browser.execute_script("arguments[0].value = '2,1';", check_data)
+
+                #
+
+                # agreed = browser.find_element_by_id("chkData")
+
+                # if agreed.get_attribute("value") != "true":
+
+                #     agreed.click()
+
+ 
+
+                if int(currency1) > int(valo_site1):
+
+                    #print("\n")
+
+                    #print("{}   {}".format(currency, valo_site))
+
+                    #print("PODEPODE, pode")
+
+ 
+
+ 
+
+                    # Clicar em Processar
+
+                    browser.find_element_by_xpath(
+
+                        "/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input").click()
+
+ 
+
+                    # Segundo Processar
+
+                    browser.find_element_by_xpath(
+
+                        "/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/div/input[1]").click()
+
+ 
+
+                    # Scroll down e tirar #print
+
+                    browser.find_element_by_xpath(
+
+                        "/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(
+
+                        Keys.PAGE_DOWN)
+
+ 
+
+                    time.sleep(0.5)
+
+                    browser.save_screenshot(
+
+                        os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc),"OBS. Valor solicitado para bloq {}, maior que dispon.{}. Valor Bloqueado foi de {}. {}_{}_{}_{}.png".format(currency, valo_site, valo_site, soc, tipo, currency, strftime("%H%M%S"))))
+
+                    df.loc[row, 'Status'] = "OK com OBS"
+
+ 
+
+ 
+
+ 
+
+                    # df.loc[row, 'Status'] = "Falhou Valor pedido, maior que a quantidade do site"
+
+                    # browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "Falhou Valor pedido, maior que a quantidade do site_{}_{}_{}_{}.png"                                                     .format(soc, tipo, currency, strftime("%H%M%S"))))
+
+                    # row += 1
+
+ 
+
+ 
+
+                if int(currency1) == int(valo_site1):
+
+                    #print("\n")
+
+                    #print("{}   {}".format(currency, valo_site))
+
+                    #print("PODEPODE, pode")
+
+ 
+
+ 
+
+                    #Clicar em Processar
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input").click()
+
+ 
+
+                    # Segundo Processar
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/div/input[1]").click()
+
+ 
+
+                    # Scroll down e tirar #print
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(Keys.PAGE_DOWN)
+
+ 
+
+                    time.sleep(0.5)
+
+                    browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "{}_{}_{}_{}.png".format(soc, tipo, currency, strftime("%H%M%S"))))
+
+                    df.loc[row, 'Status'] = "OK"
+
+ 
+
+ 
+
+ 
+
+                if int(currency1) < int(valo_site1):
+
+ 
+
+                    df.loc[row, 'Status'] = "OK"
+
+ 
+
+                    #Alterar de "Total" para "Parcial"
+
+                    browser.find_element_by_id("BloqueioId").send_keys("Parcial")
+
+ 
+
+                    # Colocar valor mostrado na planilha
+
+                    browser.find_element_by_id("txtValor").send_keys(currency)
+
+ 
+
+                    # Clicar em Processar
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input").click()
+
+ 
+
+                    # Clicar em Proessar 2
+
+                    element1 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/div/input[1]')))
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/div/input[1]").click()
+
+ 
+
+                    # Scroll down e tirar #print
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(Keys.PAGE_DOWN)
+
+                    time.sleep(0.5)
+
+ 
+
+                    browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "{}_{}_{}_{}.png".format(soc, tipo, currency, strftime("%H%M%S"))))
+
+ 
+
+            if tipo == "Bloqueio de Cota":
+
+                #print("bloq de cota")
+
+ 
+
+ 
+
+ 
+
+                # Comparar valor/cota do site com o da planilha
+
+                valo_site = browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[3]/input").get_attribute('value')
+
+                #print(valo_site)
+
+ 
+
+                valor_ou_cota = dfr['Valor ou quantidade de cotas']
+
+                #print(valor_ou_cota)
+
+ 
+
+                # formatar se for inteiro, ou seja ,00
+
+                if isinstance(valor_ou_cota, int):
+
+                    #print("INTEIRO")
+
+                    #print(valor_ou_cota)
+
+                    currency = str(valor_ou_cota) + ",00"
+
+                    thousands_separator = "."
+
+                    fractional_separator = ","
+
+                    currency = "{:,.5f}".format(valor_ou_cota)
+
+                    if thousands_separator == ".":
+
+                        main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                        new_main_currency = main_currency.replace(",", ".")
+
+                        currency = new_main_currency + fractional_separator + fractional_currency
+
+                        #print(currency)
+
+ 
+
+                # formatar se for flot, ou seja ,23
+
+                if isinstance(valor_ou_cota, float):
+
+                    thousands_separator = "."
+
+                    fractional_separator = ","
+
+                    currency = "{:,.5f}".format(valor_ou_cota)
+
+                    if thousands_separator == ".":
+
+                        main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                        new_main_currency = main_currency.replace(",", ".")
+
+                        currency = new_main_currency + fractional_separator + fractional_currency
+
+                        #print(currency)
+
+ 
+
+                currency1 = currency.replace(".", "")
+
+                currency1 = currency1.replace(",", "")
+
+ 
+
+                valo_site1 = valo_site.replace(".", "")
+
+                valo_site1 = valo_site1.replace(",", "")
+
+ 
+
+ 
+
+ 
+
+                # Caso a quantidade solicitada, seja maior que a do site, NAO FAZER
+
+                if int(currency1) > int(valo_site1):
+
+ 
+
+                    #print("\n")
+
+                    #print("{}   {}".format(currency, valo_site))
+
+                    #print("PODEPODE, pode")
+
+ 
+
+                    # Alterar para cota
+
+                    browser.find_element_by_xpath(
+
+                        "/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[10]/input").click()
+
+ 
+
+                    # Clicar em Processar
+
+                    browser.find_element_by_xpath(
+
+                        "/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input").click()
+
+ 
+
+                    # Segundo Processar
+
+                    browser.find_element_by_xpath(
+
+                        "/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/div/input[1]").click()
+
+ 
+
+                    # Scroll down e tirar #print
+
+                    browser.find_element_by_xpath(
+
+                        "/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(
+
+                        Keys.PAGE_DOWN)
+
+                    time.sleep(0.5)
+
+                    browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc),"OBS. Valor solicitado para bloq {}, maior que dispon.{}. Valor Bloqueado foi de {}. {}_{}_{}_{}.png".format(currency, valo_site, valo_site, soc, tipo, currency, strftime("%H%M%S"))))
+
+                    df.loc[row, 'Status'] = "OK com OBS"
+
+ 
+
+ 
+
+ 
+
+                # Caso o quantidade de cotas para bloq, seja a mesma quantidade de cotas que estao no site
+
+                if int(currency1) == int(valo_site1):
+
+ 
+
+ 
+
+                    #print("\n")
+
+                    #print("{}   {}".format(currency, valo_site))
+
+                    #print("PODEPODE, pode")
+
+ 
+
+ 
+
+                    # Alterar para cota
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[10]/input").click()
+
+ 
+
+                    # Clicar em Processar
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input").click()
+
+ 
+
+                    # Segundo Processar
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/div/input[1]").click()
+
+ 
+
+                    # Scroll down e tirar #print
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(Keys.PAGE_DOWN)
+
+                    time.sleep(0.5)
+
+                    browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "{}_{}_{}_{}.png".format(soc, tipo, currency, strftime("%H%M%S"))))
+
+                    df.loc[row, 'Status'] = "OK"
+
+ 
+
+ 
+
+                # Caso a quantidade do site seja menor que a quantidade de cotas que o site tem
+
+                if int(currency1) < int(valo_site1):
+
+ 
+
+                    # Alterar de "Total" para "Parcial"
+
+                    browser.find_element_by_id("BloqueioId").send_keys("Parcial")
+
+ 
+
+                    # Alterar para cota
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[3]/li[10]/input").click()
+
+ 
+
+ 
+
+                    # Colocar valor mostrado na planilha
+
+                    browser.find_element_by_id("txtQtde").send_keys(currency)
+
+ 
+
+                    # Clicar em Processar
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/input").click()
+
+ 
+
+ 
+
+                    # Clicar em Proessar 2
+
+                    element1 = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/div/input[1]')))
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/div/div/input[1]").click()
+
+ 
+
+                    # Scroll down e tirar #print
+
+                    browser.find_element_by_xpath("/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input").send_keys(Keys.PAGE_DOWN)
+
+                    time.sleep(0.5)
+
+                    browser.save_screenshot(os.path.join(os.path.dirname(os.path.realpath(__file__)), '{}\{}'.format(caminho, soc), "{}_{}_{}_{}.png".format(soc, tipo, currency, strftime("%H%M%S"))))
+
+                    df.loc[row, 'Status'] = "OK"
+
+ 
+
+ 
+
+        if tipo == "Desbloqueio de Cota" or tipo == "Desbloqueio de Valor":     #LER OS VALORES DA COLUNA COTA
+
+ 
+
+            valor_ou_cota = dfr['Valor ou quantidade de cotas']
+
+            # Colocar a Observação
+
+            obs = str(dfr['Protocolo'])
+
+ 
+
+            if tipo == "Desbloqueio de Cota":
+
+                #print('Desbloqueio de Cota  {}'.format(valor_ou_cota))
+
+ 
+
+                # Wait
+
+                element = wait.until(ec.visibility_of_element_located(
+
+                    (By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input')))
+
+ 
+
+                # Converter valor no Excel para moeda com ponto e virgula, para ficar igual o valor mostrado na pagina
+
+                thousands_separator = "."
+
+                fractional_separator = ","
+
+                currency = "{:,.5f}".format(valor_ou_cota)
+
+                if thousands_separator == ".":
+
+                    main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                    new_main_currency = main_currency.replace(",", ".")
+
+                    currency = new_main_currency + fractional_separator + fractional_currency
+
+ 
+
+                #rodar def
+
+                olhar_observacao()
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+            if tipo == "Desbloqueio de Valor":
+
+                #print('Desbloqueio de Valor  {}'.format(valor_ou_cota))
+
+                #print(row)
+
+ 
+
+ 
+
+                # Wait
+
+                element = wait.until(ec.visibility_of_element_located((By.XPATH, '/html/body/div[4]/span/div/form/div/div/div[2]/fieldset/ul[1]/li[1]/input')))
+
+ 
+
+                # Converter valor no Excel para moeda com ponto e virgula, para ficar igual o valor mostrado na pagina
+
+                thousands_separator = "."
+
+                fractional_separator = ","
+
+                currency = "{:,.2f}".format(valor_ou_cota)
+
+                if thousands_separator == ".":
+
+                    main_currency, fractional_currency = currency.split(".")[0], currency.split(".")[1]
+
+                    new_main_currency = main_currency.replace(",", ".")
+
+                    currency = new_main_currency + fractional_separator + fractional_currency
+
+ 
+
+                #import pdb
+
+                #pdb.set_trace()
+
+ 
+
+                olhar_observacao()
+
+      except:
+
+          df[['Cód do administrador:', 'Cód. do fundo:', 'Código do cotista:', 'Motivo da movimentação:',
+
+              'Tipo de solicitação:', 'Valor ou quantidade de cotas', 'Protocolo', 'Status']].to_excel(r'C:\Users\{}\Downloads\SOCs Automação\Status_saida.xlsx'.format(getpass.getuser()), index=False)
+
+ 
+
+ 
+
+          #exit()
+
+ 
+
+#print("\n")
+
+ 
+
+browser.quit()
+
+ 
+
+ 
+
+ 
+
+ 
+
+# Salvar planilha de saida
+
+df[['Cód do administrador:', 'Cód. do fundo:', 'Código do cotista:', 'Motivo da movimentação:', 'Tipo de solicitação:', 'Valor ou quantidade de cotas', 'Protocolo', 'Status']].to_excel(r'C:\Users\{}\Downloads\SOCs Automação\Status_saida.xlsx'.format(getpass.getuser()), index=False)
+
+ 
+
+ 
+
+# cronometrar tempo da execução
+
+end = time.time()
+
+hours, rem = divmod(end - start, 3600)
+
+minutes, seconds = divmod(rem, 60)
+
+print("\n")
+
+print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
+
+print("FIM")
