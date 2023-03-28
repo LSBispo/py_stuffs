@@ -50,4 +50,4 @@ for place in result_places['results']:
     print(f'Nome: {nome}')
     print(f'Endereço: {endereco}')
     print(f'E-mail: {email}')
-    print('\n')
+    print('\n') 
