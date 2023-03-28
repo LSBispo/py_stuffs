@@ -42,7 +42,7 @@ for place in result_places['results']:
     result_detail = json.loads(response_detail.text)
 
     # Verificando se o e-mail está disponível nos detalhes da empresa
-    if 'email' in result_detail:
+    if 'contato' in result_detail:
         email = result_detail['result']['email']
     else:
         email = 'E-mail não disponível'
