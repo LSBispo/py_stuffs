@@ -3,10 +3,10 @@ import json
 from geopy.geocoders import Nominatim
 
 # Insira sua chave de API do Google Maps aqui
-google_maps_key = 'AIzaSyCKcP9Kvej5kQaUc0BEEcFDm0bVAaXSefE' #AIzaSyBOPr3NeL6SmwfcA7EuIj--EvJNRszqjYo
+google_maps_key =""
 
 # Insira sua chave de API do Google Places aqui
-google_places_key = 'AIzaSyCKcP9Kvej5kQaUc0BEEcFDm0bVAaXSefE'
+google_places_key = ""
 
 # Endereço que você deseja buscar empresas
 #endereco = 'Rua Santa Aurea, 253, São Paulo, São Paulo, Brasil'
